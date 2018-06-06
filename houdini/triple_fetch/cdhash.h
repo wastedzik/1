@@ -18,4 +18,6 @@ fakesign(void* code,
          char* teamid,           // if the target has a teamid (non-platform binary), what is it? (NULL-terminated string)
          uint32_t* blob_size);
 
+bool compute_cdhash(const void *file, size_t size, void *cdhash);
+
 #endif /* cdhash_h */

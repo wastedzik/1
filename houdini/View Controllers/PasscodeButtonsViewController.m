@@ -21,6 +21,22 @@
 @interface PasscodeButtonsViewController : UIViewController  <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UISegmentedControl *styleTypeSegment;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
+
+@property (weak, nonatomic) IBOutlet UIStackView *imagesRoundStackView;
+@property (weak, nonatomic) IBOutlet UISwitch *imagesRoundSwitch;
+@property (weak, nonatomic) IBOutlet UILabel *helperLabel;
+@property (weak, nonatomic) IBOutlet UIView *passcodeView;
+@property (weak, nonatomic) IBOutlet UIButton *buttonOne;
+@property (weak, nonatomic) IBOutlet UIButton *buttonTwo;
+@property (weak, nonatomic) IBOutlet UIButton *buttonThree;
+@property (weak, nonatomic) IBOutlet UIButton *buttonFour;
+@property (weak, nonatomic) IBOutlet UIButton *buttonFive;
+@property (weak, nonatomic) IBOutlet UIButton *buttonSix;
+@property (weak, nonatomic) IBOutlet UIButton *buttonSeven;
+@property (weak, nonatomic) IBOutlet UIButton *buttonEight;
+@property (weak, nonatomic) IBOutlet UIButton *buttonNine;
+@property (weak, nonatomic) IBOutlet UIButton *buttonZero;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 
 @property (nonatomic) UIImagePickerController *imagePickerController;
@@ -30,7 +46,7 @@
 
 @property (assign) BOOL shouldRespring;
 @property (assign) NSString *style_type;
-
+@property (assign) int current_number;
 @end
 
 @implementation PasscodeButtonsViewController
@@ -41,6 +57,11 @@ NSString *passcode_image_path = @"";
     [super viewDidLoad];
     
     self.style_type = @"original";
+    
+    self.imagePickerController = [[UIImagePickerController alloc] init];
+    self.imagePickerController.delegate = self;
+    self.imagePickerController.allowsEditing = NO;
+    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
 }
 
 
@@ -73,35 +94,121 @@ NSString *passcode_image_path = @"";
 - (IBAction)styleTypeChanged:(id)sender {
     
     if (self.styleTypeSegment.selectedSegmentIndex == 0) {
+
         self.style_type = @"original";
         passcode_image_path = @"";
-    } else if (self.styleTypeSegment.selectedSegmentIndex == 1) { // Clear
+
+    } else if (self.styleTypeSegment.selectedSegmentIndex == 1) { // iOS 11
+
+        self.style_type = @"ios11";
+        passcode_image_path = [NSString stringWithFormat:@"%@/keypad_button.png", [[NSBundle mainBundle] resourcePath]];;
+
+    } else if (self.styleTypeSegment.selectedSegmentIndex == 2) { // Clear
+
         self.style_type = @"clear";
-        NSString *png_path = [NSString stringWithFormat:@"%@/keypad_button.png", [[NSBundle mainBundle] resourcePath]];
-        passcode_image_path = png_path;
+        passcode_image_path = [NSString stringWithFormat:@"%@/keypad_button.png", [[NSBundle mainBundle] resourcePath]];;
+
     } else { // otherwise, we show user's pics
+        
         self.style_type = @"custom";
         passcode_image_path = @"";
+        
+        // show custom views
+        self.imagesRoundStackView.hidden = NO;
+        self.helperLabel.hidden = NO;
+        self.passcodeView.hidden = NO;
+        
         [self.actionButton setEnabled:NO];
         [self.actionButton setAlpha:0.3];
         
-        // show the image picker
-        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-        picker.delegate = self;
-        picker.allowsEditing = NO;
-        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        [self presentViewController:picker animated:YES completion:NULL];
-        
+
         return;
     }
+    
+    // hide custom views
+    self.imagesRoundStackView.hidden = YES;
+    self.helperLabel.hidden = YES;
+    self.passcodeView.hidden = YES;
     
     [self.actionButton setEnabled:YES];
     [self.actionButton setAlpha:1.0];
 }
 
+- (IBAction)didTapButtonOne:(id)sender {
+    self.current_number = 1;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonTwo:(id)sender {
+    self.current_number = 2;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonThree:(id)sender {
+    self.current_number = 3;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonFour:(id)sender {
+    self.current_number = 4;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonFive:(id)sender {
+    self.current_number = 5;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonSix:(id)sender {
+    self.current_number = 6;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonSeven:(id)sender {
+    self.current_number = 7;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonEight:(id)sender {
+    self.current_number = 8;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonNine:(id)sender {
+    self.current_number = 9;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+- (IBAction)didTapButtonZero:(id)sender {
+    self.current_number = 0;
+    
+    // show the image picker
+    [self presentViewController:self.imagePickerController animated:YES completion:NULL];
+    
+}
+
+
 - (IBAction)applyTapped:(id)sender {
     
-    if (_shouldRespring) {
+    if (self.shouldRespring) {
         
 
         [self.actionButton setTitle:@"respringing.." forState:UIControlStateNormal];
@@ -124,7 +231,7 @@ NSString *passcode_image_path = @"";
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         
         // stop Springboard (to stop user from exiting)
-        kill_springboard(SIGSTOP);
+//        kill_springboard(SIGSTOP);
     
         if(apply_passcode_button_theme(strdup([passcode_image_path UTF8String]), strdup([self.style_type UTF8String])) != KERN_SUCCESS) {
 
@@ -178,7 +285,10 @@ NSString *passcode_image_path = @"";
     
     // resize the image and make the image rounded
     UIImage *new_image = [self scaleImageToKeypadButton:image];
-    new_image = [self makeRoundedImage:new_image radius:162/2];
+    
+    // if round, the make the image round
+    if (self.imagesRoundSwitch.on)
+        new_image = [self makeRoundedImage:new_image radius:162/2];
     
     // save the image
     NSString *output_path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/keypad_button.png"];
@@ -190,6 +300,56 @@ NSString *passcode_image_path = @"";
     passcode_image_path = output_path;
     [self.actionButton setEnabled:YES];
     [self.actionButton setAlpha:1.0];
+    
+    switch (self.current_number) {
+        case 1:
+            [self.buttonOne setBackgroundImage:new_image forState:UIControlStateNormal];
+            
+            break;
+        
+        case 2:
+            [self.buttonTwo setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+
+        case 3:
+            [self.buttonThree setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+            
+        case 4:
+            [self.buttonFour setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+
+        case 5:
+            [self.buttonFive setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+            
+        case 6:
+            [self.buttonSix setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+            
+        case 7:
+            [self.buttonSeven setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+            
+        case 8:
+            [self.buttonEight setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+            
+        case 9:
+            [self.buttonNine setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+            
+        case 0:
+            [self.buttonZero setBackgroundImage:new_image forState:UIControlStateNormal];
+            break;
+    }
+    
+    // apply the 'theme'
+    apply_passcode_button_theme_for(strdup([passcode_image_path UTF8String]), self.current_number);
+    
+    self.shouldRespring = true;
+    [self.actionButton setTitle:@"respring" forState:UIControlStateNormal];
+    [self.actionButton setEnabled:YES];
 }
 
 @end

@@ -6,17 +6,11 @@
 //  Copyright © 2017 cheesecakeufo. All rights reserved.
 //
 
-#import "IconsRenamerViewController.h"
-#include "task_ports.h"
-#include "triple_fetch_remote_call.h"
-#include "apps_control.h"
-#include "utilities.h"
 #include "display.h"
+#include "utilities.h"
+#include "apps_control.h"
 
-#include <sys/param.h>
-#include <sys/mount.h>
-
-@interface IconsRenamerViewController ()
+@interface IconsRenamerViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UISegmentedControl *renameTypeSegment;
 @property (weak, nonatomic) IBOutlet UITextField *iconsNameTextField;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
@@ -32,11 +26,6 @@
 @implementation IconsRenamerViewController
 
 char *rename_type = "original";
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-
 
 - (void)showRunning {
     
@@ -105,9 +94,7 @@ char *rename_type = "original";
     
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        
-        // stop Springboard (to stop user from exiting)
-//        kill_springboard(SIGSTOP);
+    
         
         if(rename_all_icons([self.iconsNameTextField.text UTF8String], rename_type) != KERN_SUCCESS) {
             

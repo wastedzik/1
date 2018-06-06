@@ -210,5 +210,5 @@ void sources_control_init() {
     
     // Get packages (TODO: should be moved to packages_control)
     printf("[INFO]: reloading packages..\n");
-//    packages_control_init();
+    packages_control_init();
 }

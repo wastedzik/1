@@ -30,12 +30,5 @@ void change_resolution (int width, int height) {
     [iomobile_graphics_family_dict writeToFile:output_path atomically:YES];
     
     copy_file(strdup([output_path UTF8String]), "/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist", ROOT_UID, ROOT_UID, 01444);
-    
-//    if(width == 750) {// i8
-//        copy_file(strdup([[NSString stringWithFormat:@"%@/8d.plist", [[NSBundle mainBundle] resourcePath]] UTF8String]), "/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist", ROOT_UID, ROOT_UID, 01444);
-//        copy_file(strdup([[NSString stringWithFormat:@"%@/8d.plist", [[NSBundle mainBundle] resourcePath]] UTF8String]), "/var/mobile/Library/com.apple.iokit.IOMobileGraphicsFamily.plist", ROOT_UID, ROOT_UID, 01444);
-//    } else if(width == 827) {
-//        copy_file(strdup([[NSString stringWithFormat:@"%@/8pd.plist", [[NSBundle mainBundle] resourcePath]] UTF8String]), "/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist", ROOT_UID, ROOT_UID, 01444);
-//        copy_file(strdup([[NSString stringWithFormat:@"%@/8pd.plist", [[NSBundle mainBundle] resourcePath]] UTF8String]), "/var/mobile/Library/com.apple.iokit.IOMobileGraphicsFamily.plist", ROOT_UID, ROOT_UID, 01444);
-//    }
+
 }

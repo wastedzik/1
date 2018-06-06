@@ -6,28 +6,61 @@
 //  Copyright © 2017 Abraham Masri. All rights reserved.
 //
 
-#import "JailbreakViewController.h"
-#include <spawn.h>
-#include <objc/runtime.h>
-#include <sys/param.h>
-#include <sys/mount.h>
-
 #include "utilities.h"
-#include "post_exploit.h"
-#include "task_ports.h"
 #include "sources_control.h"
 #include "strategy_control.h"
 
-@interface JailbreakViewController ()
-@property (weak, nonatomic) IBOutlet UIButton *helpButton;
+typedef NS_ENUM(NSUInteger, PLWallpaperMode) {
+    PLWallpaperModeBoth,
+    PLWallpaperModeHomeScreen,
+    PLWallpaperModeLockScreen
+};
+
+@interface PLWallpaperImageViewController : UIViewController // PLUIEditImageViewController
+
+- (instancetype)initWithUIImage:(UIImage *)image;
+- (void)_savePhoto;
+
+@property BOOL saveWallpaperData;
+@property PLWallpaperMode wallpaperMode;
+
+@end
+
+@interface PLStaticWallpaperImageViewController : PLWallpaperImageViewController
+
+@property (nonatomic) bool colorSamplingEnabled;
+
+- (void)_fetchImageForWallPaperAsset:(id)arg1 resultHandler:(id /* block */)arg2;
+- (long long)_preferredWhitePointAdaptivityStyle;
+- (id)_wallPaperPreviewControllerForAsset:(id)arg1;
+- (id)_wallPaperPreviewControllerForPhotoIrisAsset:(id)arg1;
+- (bool)colorSamplingEnabled;
+- (id)initWithImage:(id)arg1 name:(id)arg2 video:(id)arg3 time:(double)arg4;
+- (id)initWithPhoto:(id)arg1;
+- (id)initWithUIImage:(id)arg1;
+- (id)initWithUIImage:(id)arg1 name:(id)arg2;
+- (void)photoTileViewControllerDidEndGesture:(id)arg1;
+- (void)providerLegibilitySettingsChanged:(id)arg1;
+- (void)setColorSamplingEnabled:(bool)arg1;
+- (void)setWallpaperForLocations:(long long)arg1;
+- (void)viewWillAppear:(bool)arg1;
+- (id)wallpaperImage;
+
+@end
+
+@interface JailbreakViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *versionLabel;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 
+@property BOOL can_jailbreak;
 @end
 
 @implementation JailbreakViewController
+
+// jailbreakd sets this (if running)
+mach_port_t passed_priv_port = MACH_PORT_NULL;
 
 - (void)addGradient {
     
@@ -43,22 +76,51 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self addGradient];
     
     [self.versionLabel setText:[[UIDevice currentDevice] systemVersion]];
 
     [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
+    // set the view background (if we have it)
+    NSData *currentWallpaper = get_saved_wallpaper();
+    
+    if(currentWallpaper != nil) {
+        
+        UIGraphicsBeginImageContext(self.view.frame.size);
+        [[UIImage imageWithData:currentWallpaper] drawInRect:self.view.bounds];
+        UIImage *wallpaperImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage: wallpaperImage]];
+        
+        UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        blurEffectView.frame = self.view.bounds;
+        blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        [self.view insertSubview:blurEffectView atIndex:0];
+    } else {
+        [self addGradient];
+    }
+    
     
     // set the strategy
     if(set_exploit_strategy() != KERN_SUCCESS) {
         [self.startButton setEnabled:NO];
         [self.startButton setTitle:@"not supported :(" forState:UIControlStateNormal];
         [self.startButton setBackgroundColor: [UIColor colorWithRed:1 green:1 blue:1 alpha:0.0]];
+        self.can_jailbreak = NO;
+        return;
     }
+    
+    self.can_jailbreak = YES;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+
+    if(!self.can_jailbreak)
+        return;
     
     boolean_t jangojango_found = false;
     for(NSString *file_name in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[NSBundle mainBundle] resourcePath] error:NULL]) {
@@ -102,14 +164,6 @@
     [self jailbreakTapped:self.startButton];
 }
 
-- (IBAction)helpTapped:(id)sender {
-    
-    UIViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"InfoViewController"];
-    viewController.providesPresentationContextTransitionStyle = YES;
-    viewController.definesPresentationContext = YES;
-    [viewController setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [self presentViewController:viewController animated:YES completion:nil];
-}
 
 - (void) showAlertViewController {
     UIViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AlertViewController"];
@@ -121,7 +175,6 @@
 
 - (IBAction)jailbreakTapped:(id)sender {
     
-    [self.helpButton setEnabled:NO];
     [sender setTitle:@"running.." forState:UIControlStateNormal];
     [sender setBackgroundColor: [UIColor colorWithRed:1 green:1 blue:1 alpha:0.0]];
     [sender setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.6] forState:UIControlStateNormal];
@@ -142,31 +195,28 @@
             [self.activityIndicator startAnimating];
             [sender setTitle:@"post-exploitation.." forState:UIControlStateNormal];
             
+            kern_return_t ret = KERN_SUCCESS;
+            
+            // in iOS 11, we don't want to do this right away..
+            if (![[[UIDevice currentDevice] systemVersion] containsString:@"11"]) {
+                chosen_strategy.strategy_post_exploit();
+            }
+            
+            if(ret != KERN_SUCCESS) {
+                [self showAlertViewController];
+                return;
+            }
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-    
-                kern_return_t ret = KERN_SUCCESS;
                 
-                // in iOS 11, we don't want to do this right away..
-                if (![[[UIDevice currentDevice] systemVersion] containsString:@"11"]) {
-                    chosen_strategy.strategy_post_exploit();
-                }
+                // load sources
+                [sender setTitle:@"fetching packages.." forState:UIControlStateNormal];
                 
-                if(ret != KERN_SUCCESS) {
-                    [self showAlertViewController];
-                    return;
-                }
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    
-                    // load sources
-                    [sender setTitle:@"fetching packages.." forState:UIControlStateNormal];
-                    
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        sources_control_init();
-                    
-                    
-                        UIViewController *homeViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"MainUITabBarViewController"];
-                        [self presentViewController:homeViewController animated:YES completion:nil];
-                    });
+                    sources_control_init();
+                
+                
+                    UIViewController *homeViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"MainUITabBarViewController"];
+                    [self presentViewController:homeViewController animated:YES completion:nil];
                 });
             });
             

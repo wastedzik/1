@@ -6,18 +6,14 @@
 //  Copyright © 2017 cheesecakeufo. All rights reserved.
 //
 
-#import "DisplayViewController.h"
-#include "task_ports.h"
-#include "triple_fetch_remote_call.h"
-#include "apps_control.h"
-#include "strategy_control.h"
+
+
+
 #include "utilities.h"
 #include "display.h"
+#include "apps_control.h"
 
-#include <sys/param.h>
-#include <sys/mount.h>
-
-@interface DisplayViewController ()
+@interface DisplayViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UISegmentedControl *iPhoneSegmentControl;
 @property (weak, nonatomic) IBOutlet UILabel *resolutionLabel;
 

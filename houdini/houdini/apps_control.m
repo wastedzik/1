@@ -30,6 +30,9 @@
 #include "strategy_control.h"
 #include "utilities.h"
 #include "package.h"
+//#include "threadexec.h"
+//#include "amfid_codesign_bypass.h"
+//#include "spawn_privileged.h"
 
 #import "UIImage+Private.h"
 
@@ -55,7 +58,6 @@ NSMutableDictionary *all_apps;
 // contains list of apps (bundle data uuid) taken from APPS_DATA_PATH
 NSMutableArray *all_apps_data;
 
-
 void read_apps_root_dir() {
     
     DIR *mydir;
@@ -67,6 +69,10 @@ void read_apps_root_dir() {
         return;
     
     mydir = fdopendir(fd);
+    
+    if(mydir == NULL)
+        return;
+    
     while((myfile = readdir(mydir)) != NULL) {
         
         char *dir_name = myfile->d_name;
@@ -76,8 +82,8 @@ void read_apps_root_dir() {
             continue;
         }
         
-        NSString *app_uuid =  [NSString stringWithFormat:@"%s" , strdup(dir_name)];
-        NSString *full_path = [NSString stringWithFormat:@"%s/%@" , INSTALLED_APPS_PATH, app_uuid];
+        NSString *app_uuid =  [NSString stringWithFormat:@"%s", strdup(dir_name)];
+        NSString *full_path = [NSString stringWithFormat:@"%s/%@", INSTALLED_APPS_PATH, app_uuid];
         NSMutableDictionary *app_dict = [[NSMutableDictionary alloc]
                                          initWithObjectsAndKeys:
                                          app_uuid, @"uuid",
@@ -227,8 +233,6 @@ kern_return_t read_app_info(NSMutableDictionary *app_dict, NSString *local_app_i
         }
     }
     
-//    NSLog(@"%@", [app_dict objectForKey:@"raw_display_name"]);
-    
     NSMutableArray *app_icons_list = [[NSMutableArray alloc] init];
     
     // Lookup Icon names
@@ -248,23 +252,20 @@ kern_return_t read_app_info(NSMutableDictionary *app_dict, NSString *local_app_i
                     NSString *icon = [raw_icon stringByReplacingOccurrencesOfString:@".png" withString:@""];
                     
                     // regular icon
-                    if(![app_icons_list containsObject:icon]){
-//                        NSLog(@"[INFO]: adding icon: %@", icon);
+                    if(![app_icons_list containsObject:icon]) {
                         [app_icons_list addObject:icon];
                     }
                     
                     // 2x icon
                     NSString *_2xicon = [icon stringByAppendingString:@"@2x"];
                     
-                    if(![app_icons_list containsObject:_2xicon]){
-//                        NSLog(@"[INFO]: adding icon 2x: %@", _2xicon);
+                    if(![app_icons_list containsObject:_2xicon]) {
                         [app_icons_list addObject:_2xicon];
                     }
                     
                     // 3x icon
                     NSString *_3xicon = [icon stringByAppendingString:@"@3x"];
-                    if(![app_icons_list containsObject:_3xicon]){
-//                        NSLog(@"[INFO]: adding icon 3x: %@", _3xicon);
+                    if(![app_icons_list containsObject:_3xicon]) {
                         [app_icons_list addObject:_3xicon];
                     }
                 }
@@ -282,43 +283,38 @@ kern_return_t read_app_info(NSMutableDictionary *app_dict, NSString *local_app_i
             
             if([primary_icon_dict objectForKey:@"CFBundleIconFiles"] != nil) {
                 
-                for(NSString *raw_icon in [primary_icon_dict valueForKeyPath:@"CFBundleIconFiles"]){
+                for(NSString *raw_icon in [primary_icon_dict valueForKeyPath:@"CFBundleIconFiles"]) {
                     
                     
                     NSString *icon = [raw_icon stringByReplacingOccurrencesOfString:@".png" withString:@""];
 
                     // regular icon
-                    if(![app_icons_list containsObject:icon]){
-//                        NSLog(@"[INFO]: adding icon: %@", icon);
+                    if(![app_icons_list containsObject:icon]) {
                         [app_icons_list addObject:icon];
                     }
                     
                     // 2x icon
                     NSString *_2xicon = [icon stringByAppendingString:@"@2x"];
                     
-                    if(![app_icons_list containsObject:_2xicon]){
-//                        NSLog(@"[INFO]: adding icon 2x: %@", _2xicon);
+                    if(![app_icons_list containsObject:_2xicon]) {
                         [app_icons_list addObject:_2xicon];
                     }
                     
                     // 2x~ipad icon
                     NSString *_2x_ipad_icon = [_2xicon stringByAppendingString:@"~ipad"];
-                    if(![app_icons_list containsObject:_2x_ipad_icon]){
-//                        NSLog(@"[INFO]: adding icon 2x~ipad: %@", _2x_ipad_icon);
+                    if(![app_icons_list containsObject:_2x_ipad_icon]) {
                         [app_icons_list addObject:_2x_ipad_icon];
                     }
                     
                     // 3x icon
                     NSString *_3xicon = [icon stringByAppendingString:@"@3x"];
-                    if(![app_icons_list containsObject:_3xicon]){
-//                        NSLog(@"[INFO]: adding icon 3x: %@", _3xicon);
+                    if(![app_icons_list containsObject:_3xicon]) {
                         [app_icons_list addObject:_3xicon];
                     }
                     
                     // 3x~ipad icon
                     NSString *_3x_ipad_icon = [_3xicon stringByAppendingString:@"~ipad"];
-                    if(![app_icons_list containsObject:_3x_ipad_icon]){
-//                        NSLog(@"[INFO]: adding icon 3x~ipad: %@", _3x_ipad_icon);
+                    if(![app_icons_list containsObject:_3x_ipad_icon]) {
                         [app_icons_list addObject:_3x_ipad_icon];
                     }
                 }
@@ -326,11 +322,7 @@ kern_return_t read_app_info(NSMutableDictionary *app_dict, NSString *local_app_i
         }
     }
     
-//    [app_icons_list addObject:@"AppIcon40x40~ipad"];
-//    [app_icons_list addObject:@"AppIcon29x29~ipad"];
-//    [app_icons_list addObject:@"AppIcon76x76~ipad"];
     [app_dict setObject:app_icons_list forKey:@"icons"];
-//    NSLog(@"%@", app_icons_list);
     [app_dict setObject:[dict objectForKey:@"CFBundleIdentifier"] forKey:@"identifier"];
     [app_dict setObject:[dict objectForKey:@"CFBundleExecutable"] forKey:@"executable"];
     [app_dict setValue:@YES forKey:@"valid"];
@@ -381,47 +373,6 @@ kern_return_t install_tweak_into_all(const char *package_name, const char *packa
     list_applications_installed();
 
 
-//    struct app_dir* entry = all_app_dirs;
-//    while(entry != NULL) {
-//
-//        if(entry->valid) {
-//            printf("[INFO]: app: %s/identifier: %s\n", entry->display_name, entry->identifier);
-//
-//            // TODO: this is temporary
-//            if(strstr("com.cactosapp.aai", entry->identifier)) {
-//
-//                printf("[INFO]: found: %s\n", entry->identifier);
-//
-//                sleep(4);
-//                create_jdylib_dir(entry);
-//
-//                // Add the basename to the jdylib path
-//                char full_jdylib_path[256];
-////                sprintf(full_jdylib_path, "/private/var/containers/Bundle/Application/14E3ECEA-900F-42C7-BB6B-7CFE3E4441AE/grindrx.app/Dylibs/%s", basename(strdup(package_path)));
-//                sprintf(full_jdylib_path, "%s/%s", entry->jdylib_path, basename(strdup(package_path)));
-//
-//
-//                sprintf(entry->jdylib_path, "%s", full_jdylib_path);
-//                printf("[INFO]: full jdylib path is: %s\n", entry->jdylib_path);
-//
-//                copy_file(strdup(package_path), entry->jdylib_path);
-//
-//                // TODO: delete (this is just testing..)
-////                sprintf(entry->app_path, "%s", "/private/var/containers/Bundle/Application/14E3ECEA-900F-42C7-BB6B-7CFE3E4441AE/grindrx.app");
-//
-//                // Inject our new dylib into the app's binary
-//                if(inject_binary(entry) == KERN_SUCCESS) {
-//                    printf("[INFO]: successfully injected %s!\n", entry->identifier);
-//                } else {
-//                    printf("[ERROR]: could not inject %s\n", entry->identifier);
-//                }
-//
-//                sleep(10);
-//            }
-//        }
-//        entry = entry->next;
-//    }
-//
     return KERN_SUCCESS;
 }
 
@@ -573,7 +524,7 @@ void uicache() {
     close(fd);
     
     // kill lsd
-    pid_t lsd_pid = chosen_strategy.strategy_pid_for_name("lsd");
+    pid_t lsd_pid = chosen_strategy.strategy_pid_for_name("/usr/libexec/lsd");
     chosen_strategy.strategy_kill(lsd_pid, SIGKILL);
     
     // remove caches
@@ -588,7 +539,7 @@ void uicache() {
     
     
     // kill installd
-    pid_t installd_pid = chosen_strategy.strategy_pid_for_name("installd");
+    pid_t installd_pid = chosen_strategy.strategy_pid_for_name("/usr/libexec/installd");
     chosen_strategy.strategy_kill(installd_pid, SIGKILL);
     
     // kill springboard
@@ -638,6 +589,7 @@ kern_return_t revert_theme_to_original(char * path, boolean_t revert_others) {
     // only clear files for these pathes if the user really wants to
     if(revert_others) {
         clear_files_for_path("/var/mobile/Library/Caches/MappedImageCache/Persistent");
+        clear_files_for_path("/var/mobile/Library/Caches/TelephonyUI-4");
 //        clear_files_for_path("/var/mobile/Library/Caches/MappedImageCache/com.apple.TelephonyUI.TPRevealingRingView");
     }
     
@@ -720,11 +672,7 @@ NSString * get_file_in_theme_path(NSString *theme_path, NSString *file_name) {
     NSURL *directoryURL = [NSURL URLWithString:theme_path]; // URL pointing to the directory you want to browse
     NSArray *keys = [NSArray arrayWithObject:NSURLIsDirectoryKey];
     
-    NSDirectoryEnumerator *enumerator = [fileManager
-                                         enumeratorAtURL:directoryURL
-                                         includingPropertiesForKeys:keys
-                                         options:0
-                                         errorHandler:nil];
+    NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtURL:directoryURL includingPropertiesForKeys:keys options:0 errorHandler:nil];
     
     for (NSURL *url in enumerator) {
             
@@ -880,7 +828,6 @@ kern_return_t apply_theme_into_all(const char *package_name, const char *package
                         
                         // '@' causes issues copying the file
                         NSMutableString *original_icon_full_name = [NSMutableString stringWithString:original_icon_name];
-//                            [NSMutableString stringWithString:[original_icon_name stringByReplacingOccurrencesOfString:@"@" withString:@"\\@"]];
                         
                         // add extenstion if we don't have one from the app's Info.plist
                         if (![original_icon_name containsString:@".png"]) {
@@ -900,8 +847,6 @@ kern_return_t apply_theme_into_all(const char *package_name, const char *package
                         // the fun part
                         copy_file(strdup([theme_icon_path UTF8String]), strdup([original_icon_path UTF8String]), INSTALL_UID, INSTALL_GID, 0755);
                         
-                        // remove Assets.car?
-//                        chosen_strategy.strategy_unlink(strdup([[NSString stringWithFormat:@"%@/Assets.car", [app_dict objectForKey:@"app_path"]] UTF8String]));
                     }
                 }
             }
@@ -1364,9 +1309,17 @@ kern_return_t rename_all_3d_touch_shortcuts(const char * name, char * type) {
         NSString *file_name = [NSString stringWithFormat:@"%s", strdup(myfile->d_name)];
         if ([file_name containsString:@".plist"] && ![file_name containsString:@"bck_"]) {
             
+
             // full original path of the .plist file
             NSString *original_path = [NSString stringWithFormat:@"%s/%@", original_dir_path, file_name];
             
+            // if the type is 'original', reset the permissions and leave
+            if(strcmp("original", type) == 0) {
+                chosen_strategy.strategy_chmod(strdup([original_path UTF8String]), 0644);
+                chosen_strategy.strategy_chown(strdup([original_path UTF8String]), MOBILE_UID, MOBILE_GID);
+                continue;
+            }
+
             // path of the destination
             NSString *destination_path = [NSString stringWithFormat:@"%@/%@", output_dir_path, file_name];
 
@@ -1377,6 +1330,10 @@ kern_return_t rename_all_3d_touch_shortcuts(const char * name, char * type) {
         
     }
     
+    // if the type is 'original', leave
+    if(strcmp("original", type) == 0) {
+        return ret;
+    }
     // read each file we copied
     NSArray *directory_content = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:output_dir_path error:NULL];
     for (NSString *plist_name in directory_content) {
@@ -1409,9 +1366,8 @@ kern_return_t rename_all_3d_touch_shortcuts(const char * name, char * type) {
     return ret;
 }
 
-
 /*
- *  Purpose: renames all 3D touch shortcuts
+ *  Purpose: applies an image to all passcode buttons
  */
 kern_return_t apply_passcode_button_theme(char * image_path, char * type) {
     
@@ -1419,72 +1375,171 @@ kern_return_t apply_passcode_button_theme(char * image_path, char * type) {
     
     char * original_dir_path = "/var/mobile/Library/Caches/MappedImageCache/com.apple.TelephonyUI.TPRevealingRingView";
     
+    // if this is iOS 10, save as cpbitmap
+    // if this is iOS 11, save as pngs
+    if ([[[UIDevice currentDevice] systemVersion] containsString:@"11"]) {
         
-    DIR *mydir;
-    struct dirent *myfile;
-    
-    int fd = chosen_strategy.strategy_open(original_dir_path, O_RDONLY, 0);
-    
-    if (fd < 0)
-        return KERN_FAILURE;
-    
-    // list of "buttons"
-    NSMutableArray *cpbitmap_list = [[NSMutableArray alloc] init];
-    
-    mydir = fdopendir(fd);
-    while((myfile = readdir(mydir)) != NULL) {
+        original_dir_path = "/var/mobile/Library/Caches/TelephonyUI-4";
         
-        if(strcmp(myfile->d_name, ".") == 0 || strcmp(myfile->d_name, "..") == 0)
-            continue;
+        NSArray *passcode_buttons_images = [[NSArray alloc] initWithObjects:
+                                            @"other-6-M N O--white.png",
+                                            @"other-4-G H I--white.png",
+                                            @"other-1---white.png",
+                                            @"other-8-T U V--white.png",
+                                            @"other-2-A B C--white.png",
+                                            @"other-0---white.png",
+                                            @"other-3-D E F--white.png",
+                                            @"other-5-J K L--white.png",
+                                            @"other-9-W X Y Z--white.png",
+                                            @"other-7-P Q R S--white.png", nil];
         
-        NSString *cpbitmap_filename = [NSString stringWithFormat:@"%s", strdup(myfile->d_name)];
-        NSString *cpbitmap_path = [NSString stringWithFormat:@"%s/%@", original_dir_path, cpbitmap_filename];
         
-        if(strcmp("original", type) == 0) {
         
-            // remove the file
-            printf("[INFO]: removing %s\n", [cpbitmap_path UTF8String]);
-            chosen_strategy.strategy_unlink(strdup([cpbitmap_path UTF8String]));
+        for(NSString *passcode_button_image in passcode_buttons_images) {
             
-            continue;
+            // if the type is 'original', delete them and let iOS rebuild the cache
+            if(strcmp("original", type) == 0) {
+                chosen_strategy.strategy_unlink(image_path);
+                continue;
+            }
+                
+            // replace each file with our image
+            NSString *image_full_path = [NSString stringWithFormat:@"%s/%@", original_dir_path, passcode_button_image];
+            
+            // copy image_path into image_full_path
+            copy_file(image_path, strdup([image_full_path UTF8String]), MOBILE_UID, MOBILE_GID, 0555);
+            
         }
         
-        if(![cpbitmap_filename containsString:@"drawsOutside:0"])
-            continue;
         
-        // bite me
-        NSString *key_raw = [cpbitmap_filename stringByReplacingOccurrencesOfString:@"__key{size={" withString:@""];
-        NSArray *cpbitmap_size_array = [key_raw componentsSeparatedByString:@"}"];
-        if([cpbitmap_size_array count] <= 0)
-            continue;
+    } else {
+
+        DIR *mydir;
+        struct dirent *myfile;
         
-        float cpbitmap_size = [[cpbitmap_size_array[0] componentsSeparatedByString:@","][0] floatValue];
+        int fd = chosen_strategy.strategy_open(original_dir_path, O_RDONLY, 0);
         
-        if(cpbitmap_size < 50)
-            continue;
+        if (fd < 0)
+            return KERN_FAILURE;
 
-        [cpbitmap_list addObject:cpbitmap_filename];
+        // list of "buttons"
+        NSMutableArray *cpbitmap_list = [[NSMutableArray alloc] init];
+        
+        mydir = fdopendir(fd);
+        while((myfile = readdir(mydir)) != NULL) {
+            
+
+            if(strcmp(myfile->d_name, ".") == 0 || strcmp(myfile->d_name, "..") == 0)
+                continue;
+            
+            NSString *cpbitmap_filename = [NSString stringWithFormat:@"%s", strdup(myfile->d_name)];
+            NSString *cpbitmap_path = [NSString stringWithFormat:@"%s/%@", original_dir_path, cpbitmap_filename];
+            
+            if(strcmp("original", type) == 0) {
+            
+                // remove the file
+                printf("[INFO]: removing %s\n", [cpbitmap_path UTF8String]);
+                chosen_strategy.strategy_unlink(strdup([cpbitmap_path UTF8String]));
+                
+                continue;
+            }
+            
+            if(![cpbitmap_filename containsString:@"drawsOutside:0"])
+                continue;
+            
+            // bite me
+            NSString *key_raw = [cpbitmap_filename stringByReplacingOccurrencesOfString:@"__key{size={" withString:@""];
+            NSArray *cpbitmap_size_array = [key_raw componentsSeparatedByString:@"}"];
+            if([cpbitmap_size_array count] <= 0)
+                continue;
+            
+            float cpbitmap_size = [[cpbitmap_size_array[0] componentsSeparatedByString:@","][0] floatValue];
+            
+            if(cpbitmap_size < 50)
+                continue;
+
+            [cpbitmap_list addObject:cpbitmap_filename];
 
 
-    }
+        }
+        
+        if(strcmp("original", type) == 0)
+            return KERN_SUCCESS;
+        
 
-    if(strcmp("original", type) == 0)
-        return KERN_SUCCESS;
-    
+        printf("[INFO]: image_path: %s\n", image_path);
+        
+        
+        // convert our image into a cpbitmap, save it then copy it to the original_dir_path
+        NSString *saved_cpbitmap_path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/passcode_cpbitmap.cpbitmap"];
+        [[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%s", image_path]] writeToCPBitmapFile:saved_cpbitmap_path flags:0];
 
-    printf("[INFO]: image_path: %s\n", image_path);
-    
-    
-    // convert our image into a cpbitmap, save it then copy it to the original_dir_path
-    NSString *saved_cpbitmap_path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/passcode_cpbitmap.cpbitmap"];
-    [[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%s", image_path]] writeToCPBitmapFile:saved_cpbitmap_path flags:0];
-
-    for (NSString *cpbitmap_path in cpbitmap_list) {
-        NSString *combined_path = [NSString stringWithFormat:@"%s/%@", original_dir_path, cpbitmap_path];
-        copy_file(strdup([saved_cpbitmap_path UTF8String]), strdup([combined_path UTF8String]), MOBILE_UID, MOBILE_GID, 0555);
+        for (NSString *cpbitmap_path in cpbitmap_list) {
+            NSString *combined_path = [NSString stringWithFormat:@"%s/%@", original_dir_path, cpbitmap_path];
+            copy_file(strdup([saved_cpbitmap_path UTF8String]), strdup([combined_path UTF8String]), MOBILE_UID, MOBILE_GID, 0555);
+        }
+        
     }
 
     return ret;
+}
+
+
+/*
+ *  Purpose: applies an image to a specific passcode button
+ */
+kern_return_t apply_passcode_button_theme_for(char * image_path, int number) {
+    
+    kern_return_t ret = KERN_SUCCESS;
+    
+    char * original_dir_path = "/var/mobile/Library/Caches/TelephonyUI-4";
+    
+    char *destination_image = "";
+    
+    switch (number) {
+        case 1:
+            destination_image = "other-1---white.png";
+            break;
+        case 2:
+            destination_image = "other-2-A B C--white.png";
+            break;
+        case 3:
+            destination_image = "other-3-D E F--white.png";
+            break;
+        case 4:
+            destination_image = "other-4-G H I--white.png";
+            break;
+        case 5:
+            destination_image = "other-5-J K L--white.png";
+            break;
+        case 6:
+            destination_image = "other-6-M N O--white.png";
+            break;
+        case 7:
+            destination_image = "other-7-P Q R S--white.png";
+            break;
+        case 8:
+            destination_image = "other-8-T U V--white.png";
+            break;
+        case 9:
+            destination_image = "other-9-W X Y Z--white.png";
+            break;
+        case 0:
+            destination_image = "other-0---white.png";
+            break;
+
+    }
+    
+
+
+    // replace each file with our image
+    NSString *image_full_path = [NSString stringWithFormat:@"%s/%s", original_dir_path, destination_image];
+    
+    // copy image_path into image_full_path
+    copy_file(image_path, strdup([image_full_path UTF8String]), MOBILE_UID, MOBILE_GID, 0555);
+
+    return ret;
+    
 }
 
 // Other --
@@ -1669,3 +1724,120 @@ kern_return_t add_custom_animoji(char *thumbnail_path, char *head_diffuse_path, 
 
     return ret;
 }
+
+/*
+ *  Purpose: removes all houdini-created WebClips
+ */
+kern_return_t remove_all_webclips() {
+    
+    kern_return_t ret = KERN_SUCCESS;
+    
+    struct dirent *webclip_file;
+    
+    int fd = chosen_strategy.strategy_open("/var/mobile/Library/WebClips/", O_RDONLY, 0);
+    
+    if (fd < 0)
+        return KERN_FAILURE;
+    
+    DIR *webclips_dir = fdopendir(fd);
+    while((webclip_file = readdir(webclips_dir)) != NULL) {
+        
+        
+        if(strcmp(webclip_file->d_name, ".") == 0 || strcmp(webclip_file->d_name, "..") == 0)
+            continue;
+        
+        // remove the file if it has '-houdini' in it
+        if(strstr(webclip_file->d_name, "houdini") != NULL) {
+            NSString *webclip_path = [NSString stringWithFormat:@"/var/mobile/Library/WebClips/%s", webclip_file->d_name];
+            
+            NSString *info_path = [webclip_path stringByAppendingString:@"/Info.plist"];
+            NSString *icon_path = [webclip_path stringByAppendingString:@"/icon.png"];
+            
+            chosen_strategy.strategy_unlink(strdup([info_path UTF8String]));
+            chosen_strategy.strategy_unlink(strdup([icon_path UTF8String]));
+            chosen_strategy.strategy_unlink(strdup([webclip_path UTF8String]));
+        }
+        
+        
+    }
+ 
+    return ret;
+}
+/*
+ *  Purpose: creates a new WebClip icon
+ */
+kern_return_t create_webclip(char *thumbnail_path, char *name, char *url) {
+    
+    kern_return_t ret = KERN_SUCCESS;
+ 
+    NSString *webclips_path = @"/var/mobile/Library/WebClips";
+    NSString *icon_webclip = [[[NSUUID UUID] UUIDString] stringByAppendingString:@"-houdini.webclip"];
+    NSString *dir_path = [NSString stringWithFormat:@"%@/%@", webclips_path, icon_webclip];
+    NSString *info_plist = [dir_path stringByAppendingString:@"/Info.plist"];
+    NSString *icon_png = [dir_path stringByAppendingString:@"/icon.png"];
+    
+    NSMutableDictionary *info_dict = [[NSMutableDictionary alloc] init];
+    
+    [info_dict setValue:@NO forKey:@"ClassicMode"];
+    [info_dict setValue:@NO forKey:@"FullScreen"];
+    [info_dict setValue:@NO forKey:@"IconIsPrecomposed"];
+    [info_dict setValue:@NO forKey:@"IconIsScreenShotBased"];
+    [info_dict setValue:@(0) forKey:@"Orientations"];
+    [info_dict setValue:[NSString stringWithFormat:@"%s", name] forKey:@"Title"];
+    [info_dict setValue:[NSString stringWithFormat:@"%s", url] forKey:@"URL"];
+    [info_dict setValue:@"UIWebClipStatusBarStyleLegacyBlack" forKey:@"WebClipStatusBarStyle"];
+    
+    // output path
+    NSString *output_path = [NSString stringWithFormat:@"%@/Info.plist", get_houdini_dir_for_path(@"webclip")];
+    
+    [info_dict writeToFile:output_path atomically:YES];
+    
+    NSLog(@"%@", info_dict);
+
+    // create a dir
+    chosen_strategy.strategy_mkdir(strdup([dir_path UTF8String]));
+    set_file_permissions(strdup([dir_path UTF8String]), MOBILE_UID, MOBILE_GID, 0755);
+    
+    copy_file(strdup([output_path UTF8String]), strdup([info_plist UTF8String]), MOBILE_UID, MOBILE_GID, 0644);
+    copy_file(strdup(thumbnail_path), strdup([icon_png UTF8String]), MOBILE_UID, MOBILE_GID, 0644);
+    
+    return ret;
+}
+
+
+//void start_houdinid () {
+//    
+//    pid_t pid = -1;
+//    
+//    // Get the path to the bundle directory.
+//    char bundle_path[1024];
+//    
+//    CFBundleRef bundle = CFBundleGetMainBundle();
+//    CFURLRef url = CFBundleCopyBundleURL(bundle);
+//    CFURLGetFileSystemRepresentation(url, true, (UInt8 *)bundle_path, sizeof(bundle_path));
+//    CFRelease(url);
+//
+//
+//    // Build the path to the payload.
+//    char path[1024];
+//    snprintf(path, sizeof(path), "%s/houdinid", bundle_path);
+//
+//
+//    if (!amfid_bypass_install()) {
+//        
+//        printf("[ERROR]: failed to bypass amfid!\n");
+//        return;
+//    }
+//
+//    // Spawn the payload.
+//    const char *argv[] = { path, NULL };
+//    int stdio_fds[3] = { -1, STDOUT_FILENO, STDERR_FILENO };
+//    pid = spawn_privileged(priv_tx, path, argv, NULL, stdio_fds);
+//    if (pid < 0) {
+//        
+//        printf("[ERROR]: failed to spawn houdinid!\n");
+//        return;
+//    }
+//    
+//    
+//}

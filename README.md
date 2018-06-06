@@ -1,11 +1,14 @@
-# Houdini (iOS 10-10.3.2 and iOS 11-11.1.2)
+# Houdini (iOS 10-10.3.2 and iOS 11-11.3.1)
 
-by Abraham Masri @cheesecakeufo - exploits by (@i4nbeer)
+by Abraham Masri @cheesecakeufo - exploits by (@i41nbeer)
 
 [Download here](https://iabem97.github.io/houdini_website/)
 
 # How do I install this?
 You probably should just just go [here](http://iabem97.github.io/houdini_website) and follow the instructions.
+
+For iOS 11.2 to 11.3.1, you _need_ a paid developer account to build Houdini. Otherwise, please remove 'MultiPath' entitlement from the .entitlements file and continue.
+
 
 If you feel a bit more adventurous and want to see logs, use Xcode on a Mac (or a macOS VM), download the project and install XCode.
 

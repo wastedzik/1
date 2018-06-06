@@ -26,6 +26,7 @@
 #include "strategy_control.h"
 
 #include <Foundation/Foundation.h>
+#include <UIKit/UIKit.h>
 
 #define INSTALL_UID									33
 #define INSTALL_GID									33
@@ -46,12 +47,14 @@ kern_return_t copy_file(char *, char *, int, int, int);
 NSString *get_houdini_dir_for_path(NSString *);
 
 NSMutableData *get_current_wallpaper();
+NSData * get_saved_wallpaper();
 void kill_springboard(int);
 
 const char * decompress_deb_file(char *);
 char* get_houdini_app_path();
 
 void persist_priv_port();
+void show_alert(UIViewController *view_controller, NSString *title, NSString *message);
 
 void utilities_init(mach_port_t);
 

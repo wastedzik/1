@@ -293,25 +293,6 @@ kern_return_t catch_exception_raise_state
     return KERN_SUCCESS;
 }
 
-kern_return_t catch_exception_raise_state_identity
-(
- mach_port_t exception_port,
- mach_port_t thread,
- mach_port_t task,
- exception_type_t exception,
- exception_data_t code,
- mach_msg_type_number_t codeCnt,
- int *flavor,
- thread_state_t old_state,
- mach_msg_type_number_t old_stateCnt,
- thread_state_t new_state,
- mach_msg_type_number_t *new_stateCnt
- )
-{
-    // shouldn't reach
-    //printf("catch_exception_raise_state_identity\n");
-    return KERN_FAILURE;
-}
 
 union max_msg {
     union __RequestUnion__exc_subsystem requests;

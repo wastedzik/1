@@ -72,6 +72,11 @@
         blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         [self.view insertSubview:blurEffectView atIndex:0];
+        
+        // save the wallpaper
+        NSString *output_path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/wallpaper.png"];
+        [currentWallpaper writeToFile:output_path atomically:YES];
+        
     } else {
         [self addGradient];
     }

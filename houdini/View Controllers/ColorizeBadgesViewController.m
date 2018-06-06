@@ -106,15 +106,21 @@
 
 - (IBAction)applyTapped:(id)sender {
     
+    if (self.shouldRespring) {
+        
+        kill_springboard(SIGKILL);
+        return;
+
+    }
+    
     self.shouldRespring = YES;
-    // stop Springboard (to stop user from exiting)
-    kill_springboard(SIGSTOP);
+    [self.actionButton setTitle:@"respring" forState:UIControlStateNormal];
+
 
     if(change_icon_badge_color(strdup([self.textField.text UTF8String]), strdup([self.size_type UTF8String])) != KERN_SUCCESS) {
         
     }
     
-    kill_springboard(SIGKILL);
 }
 
 

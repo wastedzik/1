@@ -95,24 +95,16 @@ bool is_filtered = false;
     
     filtered_list = [[NSMutableArray alloc] init];
     
-    //    // TESTING ----
-    //    char* bundle_root = get_houdini_app_path();
-    //
-    //    char* dylib_path = NULL;
-    //    asprintf(&dylib_path, "%s/jdylibs/LocationSpoofing", bundle_root);
-    //
-    //    // Default packages
-    ////    Package *dylib_test = [[Package alloc] initWithName:@"Test Tweak" type:@"tweaks" short_desc:@"Injects an Alert View Controller into an app" url:[NSString stringWithFormat:@"%s", dylib_path]];
-    ////
-    ////    [tweaks_list addObject:dylib_test];
-    //    // ----------
-    
     utilities_list = [[NSMutableArray alloc] init];
     
     Package *display = [[Package alloc] initWithName:@"Screen Resolution" type:@"utilities" short_desc:@"Change resolution of your display" url:nil];
     Package *icons_renamer = [[Package alloc] initWithName:@"Icons Label Hide/Renamer" type:@"utilities" short_desc:@"Rename or hide your homescreen icons' labels" url:nil];
     Package *icons_shortcut_renamer = [[Package alloc] initWithName:@"Icons 3D Touch Hide/Renamer" type:@"utilities" short_desc:@"Rename or hide your homescreen 3D touch labels" url:nil];
+    Package *passcode_buttons = [[Package alloc] initWithName:@"Passcode Buttons Customizer" type:@"utilities" short_desc:@"Make authentication great again!" url:nil];
     Package *colorize_badges = [[Package alloc] initWithName:@"Icon Badges" type:@"utilities" short_desc:@"Colorize and resize icon badges!" url:nil];
+    Package *control_center_modules = [[Package alloc] initWithName:@"Control Center Toggles" type:@"utilities" short_desc:@"Reorder toggles and add blank ones!" url:nil];
+    Package *blank_icons = [[Package alloc] initWithName:@"Blank Icons" type:@"utilities" short_desc:@"Add blank icons to your home screen" url:nil];
+    Package *widgets = [[Package alloc] initWithName:@"Widgets" type:@"utilities" short_desc:@"Add widgets to your home/lock screen" url:nil];
     
     [colorize_badges setThumbnail_image:[UIImage imageNamed:@"Badge"]];
     [display setThumbnail_image:[UIImage imageNamed:@"Resize"]];
@@ -120,24 +112,24 @@ bool is_filtered = false;
     [utilities_list addObject:display];
     [utilities_list addObject:icons_renamer];
     [utilities_list addObject:icons_shortcut_renamer];
+    [utilities_list addObject:passcode_buttons];
     [utilities_list addObject:colorize_badges];
+    [utilities_list addObject:control_center_modules];
+    [utilities_list addObject:blank_icons];
+//    [utilities_list addObject:widgets];
     
     // iOS 10 packages - only
     if ([[[UIDevice currentDevice] systemVersion] containsString:@"10"]) {
         
         Package *siri_suggestions = [[Package alloc] initWithName:@"Siri Suggestions" type:@"utilities" short_desc:@"(10.2.x only) Add and edit siri suggestions" url:nil];
-        Package *passcode_buttons = [[Package alloc] initWithName:@"Passcode Buttons Customizer" type:@"utilities" short_desc:@"Make authentication great again!" url:nil];
+        
         
         [utilities_list addObject:siri_suggestions];
-        [utilities_list addObject:passcode_buttons];
     }
     
     // iOS 11 packages - only
-    if ([[[UIDevice currentDevice] systemVersion] containsString:@"11"]) {
-        
-        // disable themes section (tmp)
-        [self.packageTypeSegmentedControl setEnabled:NO forSegmentAtIndex:1];
-        
+    if (![[[UIDevice currentDevice] systemVersion] containsString:@"10"] && ![[[UIDevice currentDevice] systemVersion] containsString:@"11.2"] && ![[[UIDevice currentDevice] systemVersion] containsString:@"11.3"]) { // no root access
+            
         Package *icons_shapes = [[Package alloc] initWithName:@"Icon Shapes" type:@"utilities" short_desc:@"Change icons shapes!" url:nil];
         Package *ads_control = [[Package alloc] initWithName:@"Ads Blocker" type:@"utilities" short_desc:@"Block ads system-wide" url:nil];
         Package *emojis = [[Package alloc] initWithName:@"Emojificator" type:@"utilities" short_desc:@"Change Emoji font" url:nil];
@@ -153,6 +145,7 @@ bool is_filtered = false;
         [utilities_list addObject:ads_control];
         [utilities_list addObject:emojis];
         [utilities_list addObject:bootlogos];
+        
     }
     
     // iPhone X packages - only
@@ -179,8 +172,7 @@ bool is_filtered = false;
 
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(is_filtered) {
         return [filtered_list count];
     }
@@ -258,36 +250,43 @@ bool is_filtered = false;
     if([cell.package.type containsString:@"utilities"]) { // utilities are custom
         
         // this is not the way to do it. move it to a config file or something..
-        if([cell.package.name  isEqual: @"Screen Resolution"])
+        if([cell.package.name isEqual: @"Screen Resolution"])
             [self presentViewControllerWithIdentifier:@"DisplayViewController"];
-        else if([cell.package.name  isEqual: @"Icons Label Hide/Renamer"])
+        else if([cell.package.name isEqual: @"Icons Label Hide/Renamer"])
             [self presentViewControllerWithIdentifier:@"IconsRenamerViewController"];
-        else if([cell.package.name  isEqual: @"Icons 3D Touch Hide/Renamer"])
+        else if([cell.package.name isEqual: @"Icons 3D Touch Hide/Renamer"])
             [self presentViewControllerWithIdentifier:@"IconsShortcutRenamerViewController"];
-        else if([cell.package.name  isEqual: @"Siri Suggestions"])
+        else if([cell.package.name isEqual: @"Siri Suggestions"])
             [self presentViewControllerWithIdentifier:@"SiriSuggestionsViewController"];
-        else if([cell.package.name  isEqual: @"Passcode Buttons Customizer"])
+        else if([cell.package.name isEqual: @"Passcode Buttons Customizer"])
             [self presentViewControllerWithIdentifier:@"PasscodeButtonsViewController"];
-        else if([cell.package.name  isEqual: @"Icon Badges"])
+        else if([cell.package.name isEqual: @"Icon Badges"])
             [self presentViewControllerWithIdentifier:@"ColorizeBadgesViewController"];
-        else if([cell.package.name  isEqual: @"Icon Shapes"])
+        else if([cell.package.name isEqual: @"Icon Shapes"])
             [self presentViewControllerWithIdentifier:@"IconShapesViewController"];
-        else if([cell.package.name  isEqual: @"Ads Blocker"])
+        else if([cell.package.name isEqual: @"Ads Blocker"])
             [self presentViewControllerWithIdentifier:@"AdsControlViewController"];
-        else if([cell.package.name  isEqual: @"Emojificator"])
+        else if([cell.package.name isEqual: @"Emojificator"])
             [self presentViewControllerWithIdentifier:@"EmojisViewController"];
-        else if([cell.package.name  isEqual: @"BetterBootLogos"])
+        else if([cell.package.name isEqual: @"BetterBootLogos"])
             [self presentViewControllerWithIdentifier:@"BootlogosViewController"];
-        else if([cell.package.name  isEqual: @"IamAnimoji"])
+        else if([cell.package.name isEqual: @"IamAnimoji"])
             [self presentViewControllerWithIdentifier:@"IamAnimojiViewController"];
+        else if([cell.package.name isEqual: @"Control Center Toggles"])
+            [self presentViewControllerWithIdentifier:@"ControlCenterViewController"];
+        else if([cell.package.name isEqual: @"Blank Icons"])
+            [self presentViewControllerWithIdentifier:@"BlankIconsViewController"];
+        else if([cell.package.name isEqual: @"Widgets"])
+            [self presentViewControllerWithIdentifier:@"WidgetsViewController"];
     } else
         [self presentPackageView:cell.package];
     
 }
 
 - (IBAction)packagesTypeChanged:(id)sender {
-    if (self.packageTypeSegmentedControl.selectedSegmentIndex == 0) { // Tweaks
-        packagesType = @"tweaks";
+
+    if (self.packageTypeSegmentedControl.selectedSegmentIndex == 0) { // Tools
+        packagesType = @"tools";
     } else if (self.packageTypeSegmentedControl.selectedSegmentIndex == 1) { // Themes
         packagesType = @"themes";
     } else if (self.packageTypeSegmentedControl.selectedSegmentIndex == 2) { // Utilities

@@ -23,6 +23,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *uninstallTweaksButton;
 @property (weak, nonatomic) IBOutlet UIButton *removeThemeButton;
 @property (weak, nonatomic) IBOutlet UIButton *installDeb;
+@property (weak, nonatomic) IBOutlet UIButton *removeMyAnimmojiButton;
+@property (weak, nonatomic) IBOutlet UIButton *removeHoudiniButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicatorView;
 @property (weak, nonatomic) IBOutlet UIButton *dismissButton;
 
@@ -51,9 +53,10 @@
 - (IBAction)removeThemeTapped:(id)sender {
     
     [self.statusLabel setText:@"removing theme.."];
-    [self.uninstallTweaksButton setHidden:YES];
     [self.installDeb setHidden:YES];
+    [self.removeMyAnimmojiButton setHidden:YES];
     [self.removeThemeButton setHidden:YES];
+    [self.removeHoudiniButton setHidden:YES];
     [self.dismissButton setHidden:YES];
     [self.loadingIndicatorView setHidden:NO];
     [self.loadingIndicatorView startAnimating];
@@ -73,10 +76,6 @@
 
 - (void) startRemovingTheme:(NSTimer*)t {
 
-    
-    // stop Springboard (to stop user from exiting)
-    kill_springboard(SIGSTOP);
-    
     
     extern NSMutableDictionary *all_apps;
     if(all_apps == NULL) {
@@ -107,13 +106,14 @@
     }
     
     [self.statusLabel setText:@"respringing.."];
-    sleep(1);
+    
     printf("[INFO]: finished removing theme. clearing UI cache and respringing..\n");
     uicache();
 
 }
 
-- (IBAction)removeAnimojiTapped:(id)sender {
+- (void) removeAnimoji {
+    
     
     // remove the thumbnail first
     chosen_strategy.strategy_unlink("/System/Library/PrivateFrameworks/AvatarKit.framework/thumbnails/customanimoji.png");
@@ -145,6 +145,51 @@
     
     // finally, remove the directory itself
     chosen_strategy.strategy_unlink("/System/Library/PrivateFrameworks/AvatarKit.framework/puppets/customanimoji");
+    
+}
+
+- (IBAction)removeAnimojiTapped:(id)sender {
+
+    
+    [self removeMyAnimmojiButton];
+    
+    show_alert(self, @"Done", @"My Animoji has been removed");
+    
+}
+- (IBAction)didTapRemoveHoudini:(id)sender {
+
+    // reset 'hosts'
+    set_custom_hosts(false);
+    
+    // remove Animoji
+    [self removeAnimoji];
+    
+    // rename icons back to original
+    rename_all_icons("", "original");
+    
+    // remove widgets/wallpaper
+    delete_cached_wallpaper();
+    
+    // remove webclips
+    remove_all_webclips();
+    
+    // reset 3D Touch toggles
+    rename_all_3d_touch_shortcuts("", "original");
+    
+    // reset CC toggles
+    chosen_strategy.strategy_unlink("/private/var/mobile/Library/ControlCenter/ModuleConfiguration.plist");
+
+    // reset System Updates
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"system_updates_disabled"];
+    chosen_strategy.strategy_chown("/var/mobile/Media/Downloads", MOBILE_UID, MOBILE_GID);
+    chosen_strategy.strategy_chmod("/var/mobile/Media/Downloads", 0755);
+    
+    // remove Houdini :(
+    //clear_files_for_path(strdup([[[NSBundle mainBundle] bundlePath] UTF8String]));
+    
+    // remove theme
+    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(startRemovingTheme:) userInfo:nil repeats:NO];
+    
 }
 
 - (IBAction)dismissTapped:(id)sender {

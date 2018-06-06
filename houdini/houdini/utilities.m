@@ -68,13 +68,13 @@ kern_return_t copy_file(char * source_path, char * destination_path, int uid, in
     FILE *write_file = fdopen(write_fd, "wb");
     
     if(read_file == NULL) {
-        printf("[INFO]: can't copy. failed to read file from path: %s\n", source_path);
+        printf("[ERROR]: can't copy. failed to read file from path: %s\n", source_path);
         return KERN_FAILURE;
         
     }
     
     if(write_file == NULL) {
-        printf("[INFO]: can't copy. failed to write file with path: %s\n", destination_path);
+        printf("[ERROR]: can't copy. failed to write file with path: %s\n", destination_path);
         return KERN_FAILURE;
     }
     
@@ -156,21 +156,28 @@ NSMutableData * get_current_wallpaper() {
     return [NSData dataWithBytesNoCopy:binary_raw length:binary_size].mutableCopy;
 }
 
+
+NSData * get_saved_wallpaper() {
+    
+    
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/wallpaper.png"];
+    
+    return [[NSFileManager defaultManager] contentsAtPath:path];
+}
+
 void dlopen_it() {
     
 }
 
 void kill_springboard(int sig) {
     
-//    if ([[[UIDevice currentDevice] systemVersion] containsString:@"11"] && sig == SIGSTOP) {
-//        printf("[INFO]: got a SIGSTOP signal to SpringBoard. Not allowed!\n");
-//        return;
-//    }
-    
     printf("[INFO]: requested to kill SpringBoard!\n");
-    pid_t springboard_pid = chosen_strategy.strategy_pid_for_name("SpringBoard");
-    printf("springboard's pid: %d", springboard_pid);
-    sleep(1);
+    pid_t springboard_pid = chosen_strategy.strategy_pid_for_name("/System/Library/CoreServices/SpringBoard.app/SpringBoard");
+    if(springboard_pid == -1)
+        springboard_pid = chosen_strategy.strategy_pid_for_name("SpringBoard");
+
+    printf("[INFO]: springboard's pid: %d\n", springboard_pid);
+    
     chosen_strategy.strategy_kill(springboard_pid, sig);
     
     if(sig == SIGKILL)
@@ -485,13 +492,13 @@ char* get_houdini_app_path() {
     Purpose: persists the privileged port for later uses by running jailbreakd
 */
 void persist_priv_port() {
-    return;
-    printf("[INFO]: running jailbreakd daemon..\n");
     
-    mach_port_t launchd_task_port = find_task_port_for_path("/sbin/launchd");
-    mach_port_t springboard_task_port = find_task_port_for_path("SpringBoard");
-    
-    spawn_bundle_binary_with_priv_port(launchd_task_port, springboard_task_port, "jailbreakd", (char**)&(const char*[]){"jailbreakd", NULL}, (char**)&(const char*[]){NULL});
+//    printf("[INFO]: running jailbreakd daemon..\n");
+//
+//    mach_port_t launchd_task_port = find_task_port_for_path("/sbin/launchd");
+//    mach_port_t springboard_task_port = find_task_port_for_path("SpringBoard");
+//
+//    spawn_bundle_binary_with_priv_port(launchd_task_port, springboard_task_port, "jailbreakd", (char**)&(const char*[]){"jailbreakd", NULL}, (char**)&(const char*[]){NULL});
     
 }
 
@@ -503,5 +510,20 @@ void utilities_init(mach_port_t sport) {
     priv_port = sport;
 
 
+    
+}
+
+/*
+    Purpose: shows an alert
+ */
+void show_alert(UIViewController *view_controller, NSString *title, NSString *message) {
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message  preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *okay_action = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:nil];
+    
+    // add the 'Okay' button
+    [alert addAction:okay_action];
+    [view_controller presentViewController:alert animated:true completion:nil];
     
 }

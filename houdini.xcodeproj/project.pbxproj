@@ -26,8 +26,10 @@
 		305CEBE31FC60550003B680D /* source.m in Sources */ = {isa = PBXBuildFile; fileRef = 305CEBE21FC60550003B680D /* source.m */; };
 		305CEBE51FC608B9003B680D /* AddSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 305CEBE41FC608B9003B680D /* AddSourceViewController.m */; };
 		305CEBE81FC60A8F003B680D /* sources_control.m in Sources */ = {isa = PBXBuildFile; fileRef = 305CEBE71FC60A8F003B680D /* sources_control.m */; };
-		305CEBEB1FC63A07003B680D /* InitialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 305CEBEA1FC63A07003B680D /* InitialViewController.m */; };
 		307DFC921FD0E79400A918DC /* InstallDebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 307DFC911FD0E79300A918DC /* InstallDebViewController.m */; };
+		307FE71520C7638B007AC550 /* multi_path_sploit.c in Sources */ = {isa = PBXBuildFile; fileRef = 307FE71020C7638B007AC550 /* multi_path_sploit.c */; };
+		307FE71620C7638B007AC550 /* multi_path_offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 307FE71120C7638B007AC550 /* multi_path_offsets.m */; };
+		3080454B209E4FD400E9CC6F /* ControlCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3080454A209E4FD300E9CC6F /* ControlCenterViewController.m */; };
 		308C000C1FCA0F01007EF741 /* display.m in Sources */ = {isa = PBXBuildFile; fileRef = 308C000B1FCA0F01007EF741 /* display.m */; };
 		308C00111FCA1529007EF741 /* DisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308C00101FCA1529007EF741 /* DisplayViewController.m */; };
 		308EDE671FCCE00D00062EEA /* libarchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 308EDE661FCCE00D00062EEA /* libarchive-ios.a */; };
@@ -64,6 +66,14 @@
 		30B4D7DD1FDB8FFB00124267 /* async_wake_strategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 30B4D7DC1FDB8FFB00124267 /* async_wake_strategy.m */; };
 		30B6B13A1FE171F000350819 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B6B1391FE171F000350819 /* MapKit.framework */; };
 		30C1E0E41FCA846500C06609 /* IconsRenamerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30C1E0E31FCA846500C06609 /* IconsRenamerViewController.m */; };
+		30CE8DA720C4654E00D55E13 /* multi_path_strategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 30CE8DA520C4654E00D55E13 /* multi_path_strategy.m */; };
+		30D5C0BA209FB3BA00566A55 /* BlankIconsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D5C0B9209FB3B900566A55 /* BlankIconsViewController.m */; };
+		30D5C0BE209FE15000566A55 /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = 30D5C0BD209FE15000566A55 /* test.txt */; };
+		30D5C0C0209FEA0000566A55 /* WidgetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D5C0BF209FEA0000566A55 /* WidgetsViewController.m */; };
+		30D5C0C420A130B500566A55 /* PreviewWidgetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D5C0C320A130B500566A55 /* PreviewWidgetViewController.m */; };
+		30D5C0C720A1320B00566A55 /* WidgetObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D5C0C620A1320B00566A55 /* WidgetObject.m */; };
+		30D946D5209D622600E40E57 /* upper_echelon_strategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D946D4209D622600E40E57 /* upper_echelon_strategy.m */; };
+		30D9474F209D65F200E40E57 /* libthreadexec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D9474E209D65F200E40E57 /* libthreadexec.a */; };
 		30DE0A9E1FD7405A0036BA97 /* ColorizeBadgesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DE0A9D1FD7405A0036BA97 /* ColorizeBadgesViewController.m */; };
 		30E00A111FC6681E008EAABE /* jailbreakd in Resources */ = {isa = PBXBuildFile; fileRef = 30E00A101FC6681E008EAABE /* jailbreakd */; };
 		30F235FA1FBEA4B600EC8799 /* binary_control.m in Sources */ = {isa = PBXBuildFile; fileRef = 30F235F91FBEA4B600EC8799 /* binary_control.m */; };
@@ -94,7 +104,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		30C1E0F41FCBA5CF00C06609 /* Embed Frameworks */ = {
+		3080452E209D6D9B00E9CC6F /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30D5C11020A147D500566A55 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
@@ -132,13 +152,16 @@
 		305CEBE61FC60922003B680D /* AddSourceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddSourceViewController.h; sourceTree = "<group>"; };
 		305CEBE71FC60A8F003B680D /* sources_control.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = sources_control.m; path = houdini/sources_control.m; sourceTree = "<group>"; };
 		305CEBE91FC61262003B680D /* sources_control.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sources_control.h; path = houdini/sources_control.h; sourceTree = "<group>"; };
-		305CEBEA1FC63A07003B680D /* InitialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InitialViewController.m; sourceTree = "<group>"; };
-		305CEBEC1FC63A56003B680D /* InitialViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InitialViewController.h; sourceTree = "<group>"; };
 		30777F641FD46F7E0078A18D /* UIImage+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Private.h"; sourceTree = "<group>"; };
 		307DFC911FD0E79300A918DC /* InstallDebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstallDebViewController.m; sourceTree = "<group>"; };
+		307FE71020C7638B007AC550 /* multi_path_sploit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = multi_path_sploit.c; sourceTree = "<group>"; };
+		307FE71120C7638B007AC550 /* multi_path_offsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = multi_path_offsets.m; sourceTree = "<group>"; };
+		307FE71220C7638B007AC550 /* multi_path_sploit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = multi_path_sploit.h; sourceTree = "<group>"; };
+		307FE71320C7638B007AC550 /* multi_path_offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = multi_path_offsets.h; sourceTree = "<group>"; };
+		307FE71420C7638B007AC550 /* multi_path_kmem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = multi_path_kmem.h; sourceTree = "<group>"; };
+		3080454A209E4FD300E9CC6F /* ControlCenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlCenterViewController.m; sourceTree = "<group>"; };
 		308C000B1FCA0F01007EF741 /* display.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = display.m; path = houdini/display.m; sourceTree = "<group>"; };
 		308C000E1FCA0F21007EF741 /* display.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = display.h; path = houdini/display.h; sourceTree = "<group>"; };
-		308C000F1FCA1529007EF741 /* DisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayViewController.h; sourceTree = "<group>"; };
 		308C00101FCA1529007EF741 /* DisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayViewController.m; sourceTree = "<group>"; };
 		308EDE631FCCE00D00062EEA /* archive_entry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = archive_entry.h; sourceTree = "<group>"; };
 		308EDE641FCCE00D00062EEA /* archive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = archive.h; sourceTree = "<group>"; };
@@ -203,8 +226,22 @@
 		30B4D7C51FDB8EA200124267 /* xpc_handshake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpc_handshake.h; sourceTree = "<group>"; };
 		30B4D7DC1FDB8FFB00124267 /* async_wake_strategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = async_wake_strategy.m; sourceTree = "<group>"; };
 		30B6B1391FE171F000350819 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		30C1E0E21FCA846500C06609 /* IconsRenamerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconsRenamerViewController.h; sourceTree = "<group>"; };
 		30C1E0E31FCA846500C06609 /* IconsRenamerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconsRenamerViewController.m; sourceTree = "<group>"; };
+		30CE8DA520C4654E00D55E13 /* multi_path_strategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = multi_path_strategy.m; sourceTree = "<group>"; };
+		30CE8DA620C4654E00D55E13 /* multi_path_strategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = multi_path_strategy.h; sourceTree = "<group>"; };
+		30D5C0B9209FB3B900566A55 /* BlankIconsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlankIconsViewController.m; sourceTree = "<group>"; };
+		30D5C0BD209FE15000566A55 /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
+		30D5C0BF209FEA0000566A55 /* WidgetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WidgetsViewController.m; sourceTree = "<group>"; };
+		30D5C0C220A130B500566A55 /* PreviewWidgetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewWidgetViewController.h; sourceTree = "<group>"; };
+		30D5C0C320A130B500566A55 /* PreviewWidgetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewWidgetViewController.m; sourceTree = "<group>"; };
+		30D5C0C520A131B800566A55 /* WidgetObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WidgetObject.h; sourceTree = "<group>"; };
+		30D5C0C620A1320B00566A55 /* WidgetObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WidgetObject.m; sourceTree = "<group>"; };
+		30D5C0FD20A147C000566A55 /* libobjc.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libobjc.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libobjc.tbd; sourceTree = DEVELOPER_DIR; };
+		30D5C10720A147D500566A55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30D946D3209D622600E40E57 /* upper_echelon_strategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upper_echelon_strategy.h; sourceTree = "<group>"; };
+		30D946D4209D622600E40E57 /* upper_echelon_strategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = upper_echelon_strategy.m; sourceTree = "<group>"; };
+		30D946DA209D62BD00E40E57 /* houdini.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = houdini.entitlements; sourceTree = "<group>"; };
+		30D9474E209D65F200E40E57 /* libthreadexec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libthreadexec.a; path = houdini/libthreadexec.a; sourceTree = "<group>"; };
 		30DE0A9D1FD7405A0036BA97 /* ColorizeBadgesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorizeBadgesViewController.m; sourceTree = "<group>"; };
 		30E00A101FC6681E008EAABE /* jailbreakd */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = jailbreakd; sourceTree = "<group>"; };
 		30F235F91FBEA4B600EC8799 /* binary_control.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = binary_control.m; path = houdini/binary_control.m; sourceTree = "<group>"; };
@@ -215,7 +252,6 @@
 		30F236011FBF971E00EC8799 /* utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = utilities.h; path = houdini/utilities.h; sourceTree = "<group>"; };
 		30F236031FBFB67500EC8799 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		30F236041FBFB67500EC8799 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
-		30F236051FBFB67500EC8799 /* JailbreakViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JailbreakViewController.h; sourceTree = "<group>"; };
 		30F236061FBFB67500EC8799 /* JailbreakViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JailbreakViewController.m; sourceTree = "<group>"; };
 		30F236091FBFBDF600EC8799 /* PackagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PackagesViewController.h; sourceTree = "<group>"; };
 		30F2360A1FBFBDF600EC8799 /* PackagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PackagesViewController.m; sourceTree = "<group>"; };
@@ -267,6 +303,7 @@
 				308EDE6A1FCCE03A00062EEA /* libz.1.1.3.tbd in Frameworks */,
 				30B6B13A1FE171F000350819 /* MapKit.framework in Frameworks */,
 				308EDE6E1FCCE16D00062EEA /* libbz2.tbd in Frameworks */,
+				30D9474F209D65F200E40E57 /* libthreadexec.a in Frameworks */,
 				308EDE671FCCE00D00062EEA /* libarchive-ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -301,10 +338,26 @@
 				30B4D6DF1FDA268300124267 /* triple_fetch_strategy.m */,
 				7543BEA51FDF62F50006745F /* async_wake_strategy.h */,
 				30B4D7DC1FDB8FFB00124267 /* async_wake_strategy.m */,
+				30D946D3209D622600E40E57 /* upper_echelon_strategy.h */,
+				30D946D4209D622600E40E57 /* upper_echelon_strategy.m */,
+				30CE8DA620C4654E00D55E13 /* multi_path_strategy.h */,
+				30CE8DA520C4654E00D55E13 /* multi_path_strategy.m */,
 				308C000D1FCA0F11007EF741 /* utilities */,
 				30777F641FD46F7E0078A18D /* UIImage+Private.h */,
 			);
 			name = houdini;
+			sourceTree = "<group>";
+		};
+		307FE70F20C7638B007AC550 /* multi_path */ = {
+			isa = PBXGroup;
+			children = (
+				307FE71320C7638B007AC550 /* multi_path_offsets.h */,
+				307FE71120C7638B007AC550 /* multi_path_offsets.m */,
+				307FE71220C7638B007AC550 /* multi_path_sploit.h */,
+				307FE71020C7638B007AC550 /* multi_path_sploit.c */,
+				307FE71420C7638B007AC550 /* multi_path_kmem.h */,
+			);
+			path = multi_path;
 			sourceTree = "<group>";
 		};
 		308C000D1FCA0F11007EF741 /* utilities */ = {
@@ -319,9 +372,7 @@
 		308C00121FCA152C007EF741 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				308C000F1FCA1529007EF741 /* DisplayViewController.h */,
 				308C00101FCA1529007EF741 /* DisplayViewController.m */,
-				30C1E0E21FCA846500C06609 /* IconsRenamerViewController.h */,
 				30C1E0E31FCA846500C06609 /* IconsRenamerViewController.m */,
 				30F9C2901FCE492C0092516B /* IconsShortcutRenamerViewController.m */,
 				300DBC6F1FD252B200A986B9 /* SiriSuggestionsViewController.m */,
@@ -332,6 +383,13 @@
 				30575C0D1FFBD23000DD0EC0 /* EmojisViewController.m */,
 				30575C0F1FFC0E1700DD0EC0 /* BootlogosViewController.m */,
 				30575C111FFC288700DD0EC0 /* IamAnimojiViewController.m */,
+				3080454A209E4FD300E9CC6F /* ControlCenterViewController.m */,
+				30D5C0B9209FB3B900566A55 /* BlankIconsViewController.m */,
+				30D5C0BF209FEA0000566A55 /* WidgetsViewController.m */,
+				30D5C0C220A130B500566A55 /* PreviewWidgetViewController.h */,
+				30D5C0C320A130B500566A55 /* PreviewWidgetViewController.m */,
+				30D5C0C520A131B800566A55 /* WidgetObject.h */,
+				30D5C0C620A1320B00566A55 /* WidgetObject.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -410,6 +468,8 @@
 		30C1E0EC1FCBA41400C06609 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				30D5C0FD20A147C000566A55 /* libobjc.tbd */,
+				30D9474E209D65F200E40E57 /* libthreadexec.a */,
 				30B6B1391FE171F000350819 /* MapKit.framework */,
 				30F9C28D1FCD1A380092516B /* liblzma.5.tbd */,
 				30F9C28B1FCD19DE0092516B /* liblzma.tbd */,
@@ -420,12 +480,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		30D5C10520A147D500566A55 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				30D5C10720A147D500566A55 /* Info.plist */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
 		30F236021FBFB67500EC8799 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				305CEBEC1FC63A56003B680D /* InitialViewController.h */,
-				305CEBEA1FC63A07003B680D /* InitialViewController.m */,
-				30F236051FBFB67500EC8799 /* JailbreakViewController.h */,
 				30F236061FBFB67500EC8799 /* JailbreakViewController.m */,
 				303EE0581FD6331F0008EAA8 /* InfoViewController.m */,
 				303EE0561FD632C90008EAA8 /* AlertViewController.m */,
@@ -488,6 +553,7 @@
 			isa = PBXGroup;
 			children = (
 				B0CFEB171EEEEDD900310825 /* houdini */,
+				30D5C10520A147D500566A55 /* test */,
 				B0CFEB161EEEEDD900310825 /* Products */,
 				30C1E0EC1FCBA41400C06609 /* Frameworks */,
 			);
@@ -504,17 +570,20 @@
 		B0CFEB171EEEEDD900310825 /* houdini */ = {
 			isa = PBXGroup;
 			children = (
+				30D946DA209D62BD00E40E57 /* houdini.entitlements */,
 				303EE0541FD62F420008EAA8 /* keypad_button.png */,
 				302A93431FFB424E00B44575 /* custom_hosts */,
 				308EDE681FCCE01700062EEA /* other */,
-				30B4D7971FDB8EA100124267 /* triple_fetch */,
 				7543BE7D1FDF5F630006745F /* async_wake */,
+				307FE70F20C7638B007AC550 /* multi_path */,
+				30B4D7971FDB8EA100124267 /* triple_fetch */,
 				3059558F1FBE707800542538 /* houdini */,
 				30F236021FBFB67500EC8799 /* View Controllers */,
 				B0CFEB1B1EEEEDD900310825 /* AppDelegate.h */,
 				B0CFEB1C1EEEEDD900310825 /* AppDelegate.m */,
 				B0CFEB211EEEEDD900310825 /* Main.storyboard */,
 				B0CFEB241EEEEDD900310825 /* Assets.xcassets */,
+				30D5C0BD209FE15000566A55 /* test.txt */,
 				30E00A101FC6681E008EAABE /* jailbreakd */,
 				302A933B1FFB0DF300B44575 /* uicache */,
 				B0CFEB291EEEEDD900310825 /* Info.plist */,
@@ -541,7 +610,8 @@
 				B0CFEB111EEEEDD900310825 /* Sources */,
 				B0CFEB121EEEEDD900310825 /* Frameworks */,
 				B0CFEB131EEEEDD900310825 /* Resources */,
-				30C1E0F41FCBA5CF00C06609 /* Embed Frameworks */,
+				3080452E209D6D9B00E9CC6F /* Embed App Extensions */,
+				30D5C11020A147D500566A55 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -563,11 +633,11 @@
 				TargetAttributes = {
 					B0CFEB141EEEEDD900310825 = {
 						CreatedOnToolsVersion = 8.2;
-						DevelopmentTeam = D34X7XXW5V;
+						DevelopmentTeam = LTZQ9BU56B;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.DataProtection = {
 								enabled = 0;
@@ -616,6 +686,7 @@
 				B0CFEB251EEEEDD900310825 /* Assets.xcassets in Resources */,
 				303EE0551FD62F420008EAA8 /* keypad_button.png in Resources */,
 				30E00A111FC6681E008EAABE /* jailbreakd in Resources */,
+				30D5C0BE209FE15000566A55 /* test.txt in Resources */,
 				B0CFEB231EEEEDD900310825 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -635,6 +706,7 @@
 				308C000C1FCA0F01007EF741 /* display.m in Sources */,
 				30B4D7D31FDB8EA200124267 /* patch_amfid.c in Sources */,
 				30F236111FBFDEB900EC8799 /* ViewPackageViewController.m in Sources */,
+				30D946D5209D622600E40E57 /* upper_echelon_strategy.m in Sources */,
 				309819961FC5F8CD00CB19CB /* PackagesOptionsViewController.m in Sources */,
 				30B4D6DE1FDA240D00124267 /* strategy_control.m in Sources */,
 				30B4D7D41FDB8EA200124267 /* post_exploit.c in Sources */,
@@ -644,6 +716,7 @@
 				30F235FA1FBEA4B600EC8799 /* binary_control.m in Sources */,
 				30B4D7D51FDB8EA200124267 /* triple_fetch_remote_call.c in Sources */,
 				30F2360B1FBFBDF600EC8799 /* PackagesViewController.m in Sources */,
+				3080454B209E4FD400E9CC6F /* ControlCenterViewController.m in Sources */,
 				30575C121FFC288700DD0EC0 /* IamAnimojiViewController.m in Sources */,
 				30B4D7CF1FDB8EA200124267 /* oxpc_uint64.c in Sources */,
 				7543BE991FDF5F630006745F /* async_wake.m in Sources */,
@@ -664,12 +737,13 @@
 				30B4D7C61FDB8EA200124267 /* cdhash.c in Sources */,
 				30B4D7CC1FDB8EA200124267 /* oxpc_object.c in Sources */,
 				B0CFEB1A1EEEEDD900310825 /* main.m in Sources */,
+				307FE71520C7638B007AC550 /* multi_path_sploit.c in Sources */,
 				30B4D7CE1FDB8EA200124267 /* oxpc_string.c in Sources */,
+				30D5C0C720A1320B00566A55 /* WidgetObject.m in Sources */,
 				30575C101FFC0E1700DD0EC0 /* BootlogosViewController.m in Sources */,
 				300DBC701FD252B200A986B9 /* SiriSuggestionsViewController.m in Sources */,
 				7543BE9B1FDF5F630006745F /* find_port.c in Sources */,
 				3096DB731FC4BBB900A74011 /* MainUITabBarViewController.m in Sources */,
-				305CEBEB1FC63A07003B680D /* InitialViewController.m in Sources */,
 				7543BEA01FDF5F630006745F /* jailbreak.c in Sources */,
 				30B4D7D11FDB8EA200124267 /* oxpc_uuid.c in Sources */,
 				303EE0571FD632C90008EAA8 /* AlertViewController.m in Sources */,
@@ -681,9 +755,11 @@
 				30DE0A9E1FD7405A0036BA97 /* ColorizeBadgesViewController.m in Sources */,
 				30B4D7D91FDB8EA200124267 /* sploit.m in Sources */,
 				30B4D7D81FDB8EA200124267 /* remote_ports.c in Sources */,
+				30CE8DA720C4654E00D55E13 /* multi_path_strategy.m in Sources */,
 				307DFC921FD0E79400A918DC /* InstallDebViewController.m in Sources */,
 				30B4D7DB1FDB8EA200124267 /* xpc_handshake.c in Sources */,
 				30B4D7D61FDB8EA200124267 /* remote_file.c in Sources */,
+				30D5C0C0209FEA0000566A55 /* WidgetsViewController.m in Sources */,
 				304C1AA41FC747B3005AF293 /* packages_control.m in Sources */,
 				30F2360D1FBFC92800EC8799 /* package.m in Sources */,
 				7543BE9D1FDF5F630006745F /* symbols.c in Sources */,
@@ -693,8 +769,11 @@
 				30B4D7D21FDB8EA200124267 /* minibplist16.c in Sources */,
 				308C00111FCA1529007EF741 /* DisplayViewController.m in Sources */,
 				30B4D7DA1FDB8EA200124267 /* task_ports.c in Sources */,
+				30D5C0BA209FB3BA00566A55 /* BlankIconsViewController.m in Sources */,
+				307FE71620C7638B007AC550 /* multi_path_offsets.m in Sources */,
 				305CEBE31FC60550003B680D /* source.m in Sources */,
 				305CEBE01FC6035D003B680D /* SourcesViewController.m in Sources */,
+				30D5C0C420A130B500566A55 /* PreviewWidgetViewController.m in Sources */,
 				30575C0E1FFBD23000DD0EC0 /* EmojisViewController.m in Sources */,
 				30B4D7D01FDB8EA200124267 /* oxpc_utils.c in Sources */,
 				30B4D7D71FDB8EA200124267 /* remote_memory.c in Sources */,
@@ -811,10 +890,11 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_ENTITLEMENTS = houdini/houdini.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LTZQ9BU56B;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/houdini",
@@ -833,7 +913,7 @@
 					"-framework",
 					IOKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cheesecakeufo.houdini;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cheesecakeufo.houdinib3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SYSTEM_HEADER_SEARCH_PATHS = "";
@@ -847,10 +927,11 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_ENTITLEMENTS = houdini/houdini.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LTZQ9BU56B;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/houdini",
@@ -869,7 +950,7 @@
 					"-framework",
 					IOKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cheesecakeufo.houdini;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cheesecakeufo.houdinib3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SYSTEM_HEADER_SEARCH_PATHS = "";
